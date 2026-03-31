@@ -4,7 +4,6 @@
     "slug": "thr-minggu4",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "backgroundColor": "#FFE4EE"
@@ -26,7 +25,8 @@
             "compileSdkVersion": 35
           }
         }
-      ]
+      ],
+      "expo-asset"
     ]
   }
 }
