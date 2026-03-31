@@ -1,50 +1,136 @@
-# Welcome to your Expo app 👋
+# 🌙 THR Manager — Tugas Minggu 4
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> Aplikasi pencatat keuangan THR (Tunjangan Hari Raya) berbasis React Native + Expo
 
-## Get started
+---
 
-1. Install dependencies
+## 👩‍💻 Identitas
 
-   ```bash
-   npm install
-   ```
+| Field         | Isi                      |
+| ------------- | ------------------------ |
+| Nama          | [Nama Kamu]              |
+| NIM           | [NIM Kamu]               |
+| Kelas         | [Kelas Kamu]             |
+| Opsi Aplikasi | Opsi 2 — THR Manager App |
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 📱 Fitur Utama
 
-In the output, you'll find options to open the app in a
+- ✅ Catat pemasukan & pengeluaran THR
+- ✅ Filter transaksi (semua / pemasukan / pengeluaran)
+- ✅ Progress chart ringkasan keuangan
+- ✅ Dark Mode (ThemeContext)
+- ✅ Hapus transaksi (long press)
+- ✅ Data tersimpan permanen via AsyncStorage
+- ✅ Search transaksi di halaman riwayat
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## 🛠️ Cara Menjalankan
 
 ```bash
-npm run reset-project
+# 1. Clone repo
+git clone https://github.com/[username]/thr-minggu4-[NIM].git
+cd thr-minggu4-[NIM]
+
+# 2. Install dependencies
+npm install
+
+# 3. Jalankan
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Scan QR dengan Expo Go (Android/iOS).
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## 📋 Checklist Teknis
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Wajib
 
-## Join the community
+| Requirement                   | Implementasi                                                                                                        | File                                          |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `useState` ≥ 3 state lokal    | `type`, `amount`, `selectedCategory`, `note`, `isSubmitting`, `search`                                              | `AddTransactionScreen.js`, `HistoryScreen.js` |
+| `useEffect`                   | Load AsyncStorage saat mount, auto-save transactions                                                                | `THRContext.js`                               |
+| `createContext + Provider`    | `THRContext`, `ThemeContext`                                                                                        | `context/`                                    |
+| `useContext` ≥ 2 komponen     | Dipakai di semua screen & components                                                                                | semua file                                    |
+| `useReducer` ≥ 4 action types | `SET_TRANSACTIONS`, `ADD_TRANSACTION`, `DELETE_TRANSACTION`, `SET_FILTER`, `SET_LOADING`, `SET_TARGET`, `RESET_ALL` | `thrReducer.js`                               |
+| Custom Hook                   | `useTHR()` → dipakai di HomeScreen, HistoryScreen, ProfileScreen, TransactionCard                                   | `hooks/useTHR.js`                             |
+| Custom Hook                   | `useStorage()` → dipakai di THRContext, ThemeContext, ProfileScreen                                                 | `hooks/useStorage.js`                         |
+| `AsyncStorage`                | Persist transactions, theme, saving target                                                                          | `useStorage.js`                               |
+| `FlatList`                    | Daftar transaksi di HistoryScreen                                                                                   | `HistoryScreen.js`                            |
 
-Join our community of developers creating universal apps.
+### Bonus
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Bonus                             | Status  |
+| --------------------------------- | ------- |
+| Dark Mode (ThemeContext terpisah) | ✅ Done |
+| Visualisasi data (progress bar)   | ✅ Done |
+
+---
+
+## 📁 Struktur File
+
+```
+src/
+├── context/
+│   ├── THRContext.js       ← Global state + useReducer
+│   └── ThemeContext.js     ← Dark mode Context
+├── hooks/
+│   ├── useTHR.js           ← Custom hook (reused 3+ tempat)
+│   └── useStorage.js       ← Custom hook AsyncStorage (reused 3+ tempat)
+├── reducers/
+│   └── thrReducer.js       ← 7 action types
+├── screens/
+│   ├── HomeScreen.js
+│   ├── AddTransactionScreen.js
+│   ├── HistoryScreen.js
+│   └── ProfileScreen.js
+├── components/
+│   ├── TransactionCard.js
+│   ├── SummaryCard.js
+│   ├── ProgressChart.js
+│   ├── FilterChip.js
+│   └── EmptyState.js
+├── constants/
+│   ├── colors.js
+│   └── categories.js
+└── utils/
+    └── format.js
+```
+
+---
+
+## 🧠 Penjelasan State Management
+
+### THRContext + useReducer
+
+Global state untuk semua data transaksi. Reducer menangani 7 action types:
+
+- `SET_TRANSACTIONS` — load dari storage
+- `ADD_TRANSACTION` — tambah transaksi baru
+- `DELETE_TRANSACTION` — hapus transaksi
+- `SET_FILTER` — filter riwayat
+- `SET_LOADING` — loading state
+- `SET_TARGET` — target tabungan
+- `RESET_ALL` — reset semua data
+
+### ThemeContext (Bonus)
+
+Context terpisah untuk dark/light mode. State theme di-persist ke AsyncStorage.
+
+### Custom Hooks
+
+- `useTHR()` — abstraksi akses THRContext + computed values (summary, filteredTransactions, chartData). Dipakai di HomeScreen, HistoryScreen, ProfileScreen, TransactionCard.
+- `useStorage()` — abstraksi semua operasi AsyncStorage. Dipakai di THRContext, ThemeContext, ProfileScreen.
+
+---
+
+## 🖼️ Screenshots
+
+> _(Tambahkan screenshot setelah running app)_
+
+| Home                          | Tambah                      | Riwayat                             | Dark Mode                     |
+| ----------------------------- | --------------------------- | ----------------------------------- | ----------------------------- |
+| ![home](screenshots/home.png) | ![add](screenshots/add.png) | ![history](screenshots/history.png) | ![dark](screenshots/dark.png) |
