@@ -1,136 +1,26 @@
-# 🌙 THR Manager — Tugas Minggu 4
+# THRApps — THR Minggu 4 State Management
 
-> Aplikasi pencatat keuangan THR (Tunjangan Hari Raya) berbasis React Native + Expo
+## Informasi Mahasiswa
+-	Nama : Benita Aryani
+-	NIM  : 2410501023
+-	Opsi : B - THRApps
 
----
+## Deskripsi Aplikasi
+THRApps adalah aplikasi untuk memanajemen pemasukan dan pengeluaran THR kamu selama hari raya supaya kamu tidak kesusahan dan kebingungan ketika "Loh, kok tiba tiba uangku sudah hilang semua!"
 
-## 👩‍💻 Identitas
+## Hooks yang Digunakan
+-	useState: Digunakan untuk mengelola state lokal seperti type, amount, selectedCategory, note, isSubmitting, dan search. State ini dipakai pada proses input transaksi dan pencarian data transaksi di AddTransactionScreen.js dan HistoryScreen.js.
+-	useEffect: Digunakan untuk menjalankan proses saat komponen pertama kali dimuat (mount), yaitu untuk mengambil data transaksi dari AsyncStorage serta melakukan penyimpanan otomatis (auto-save) ketika data transaksi berubah. Implementasi terdapat di THRContext.js.
+-	useReducer: SET_TRANSACTIONS, ADD_TRANSACTION, DELETE_TRANSACTION, SET_FILTER, SET_LOADING, SET_TARGET, dan RESET_ALL.
+-	Custom Hook:
+    - useTHR(): Digunakan sebagai abstraksi untuk mengakses THRContext serta menyediakan data tambahan seperti ringkasan transaksi (summary), transaksi yang sudah difilter (filteredTransactions), dan data grafik (chartData). Hook ini dipakai di HomeScreen, HistoryScreen, ProfileScreen, dan TransactionCard.
+    - useStorage(): Digunakan sebagai abstraksi untuk semua operasi AsyncStorage, seperti menyimpan dan mengambil data transaksi, tema aplikasi, serta target tabungan. Hook ini digunakan di THRContext, ThemeContext, dan ProfileScreen.
 
-| Field         | Isi                      |
-| ------------- | ------------------------ |
-| Nama          | [Nama Kamu]              |
-| NIM           | [NIM Kamu]               |
-| Kelas         | [Kelas Kamu]             |
-| Opsi Aplikasi | Opsi 2 — THR Manager App |
+## Screenshot
+<img width="738" height="1600" alt="image" src="https://github.com/user-attachments/assets/444905d6-44c6-4490-b08e-73a9cb6c0f41" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/24f54787-f9ec-4742-a490-595622f2da22" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/0d31382e-1542-4120-a6a1-72e74e4ebe79" />
+<img width="738" height="1600" alt="image" src="https://github.com/user-attachments/assets/2934e8c7-0257-49ca-85a8-84e0c0b6f63a" />
 
----
-
-## 📱 Fitur Utama
-
-- ✅ Catat pemasukan & pengeluaran THR
-- ✅ Filter transaksi (semua / pemasukan / pengeluaran)
-- ✅ Progress chart ringkasan keuangan
-- ✅ Dark Mode (ThemeContext)
-- ✅ Hapus transaksi (long press)
-- ✅ Data tersimpan permanen via AsyncStorage
-- ✅ Search transaksi di halaman riwayat
-
----
-
-## 🛠️ Cara Menjalankan
-
-```bash
-# 1. Clone repo
-git clone https://github.com/[username]/thr-minggu4-[NIM].git
-cd thr-minggu4-[NIM]
-
-# 2. Install dependencies
-npm install
-
-# 3. Jalankan
-npx expo start
-```
-
-Scan QR dengan Expo Go (Android/iOS).
-
----
-
-## 📋 Checklist Teknis
-
-### Wajib
-
-| Requirement                   | Implementasi                                                                                                        | File                                          |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| `useState` ≥ 3 state lokal    | `type`, `amount`, `selectedCategory`, `note`, `isSubmitting`, `search`                                              | `AddTransactionScreen.js`, `HistoryScreen.js` |
-| `useEffect`                   | Load AsyncStorage saat mount, auto-save transactions                                                                | `THRContext.js`                               |
-| `createContext + Provider`    | `THRContext`, `ThemeContext`                                                                                        | `context/`                                    |
-| `useContext` ≥ 2 komponen     | Dipakai di semua screen & components                                                                                | semua file                                    |
-| `useReducer` ≥ 4 action types | `SET_TRANSACTIONS`, `ADD_TRANSACTION`, `DELETE_TRANSACTION`, `SET_FILTER`, `SET_LOADING`, `SET_TARGET`, `RESET_ALL` | `thrReducer.js`                               |
-| Custom Hook                   | `useTHR()` → dipakai di HomeScreen, HistoryScreen, ProfileScreen, TransactionCard                                   | `hooks/useTHR.js`                             |
-| Custom Hook                   | `useStorage()` → dipakai di THRContext, ThemeContext, ProfileScreen                                                 | `hooks/useStorage.js`                         |
-| `AsyncStorage`                | Persist transactions, theme, saving target                                                                          | `useStorage.js`                               |
-| `FlatList`                    | Daftar transaksi di HistoryScreen                                                                                   | `HistoryScreen.js`                            |
-
-### Bonus
-
-| Bonus                             | Status  |
-| --------------------------------- | ------- |
-| Dark Mode (ThemeContext terpisah) | ✅ Done |
-| Visualisasi data (progress bar)   | ✅ Done |
-
----
-
-## 📁 Struktur File
-
-```
-src/
-├── context/
-│   ├── THRContext.js       ← Global state + useReducer
-│   └── ThemeContext.js     ← Dark mode Context
-├── hooks/
-│   ├── useTHR.js           ← Custom hook (reused 3+ tempat)
-│   └── useStorage.js       ← Custom hook AsyncStorage (reused 3+ tempat)
-├── reducers/
-│   └── thrReducer.js       ← 7 action types
-├── screens/
-│   ├── HomeScreen.js
-│   ├── AddTransactionScreen.js
-│   ├── HistoryScreen.js
-│   └── ProfileScreen.js
-├── components/
-│   ├── TransactionCard.js
-│   ├── SummaryCard.js
-│   ├── ProgressChart.js
-│   ├── FilterChip.js
-│   └── EmptyState.js
-├── constants/
-│   ├── colors.js
-│   └── categories.js
-└── utils/
-    └── format.js
-```
-
----
-
-## 🧠 Penjelasan State Management
-
-### THRContext + useReducer
-
-Global state untuk semua data transaksi. Reducer menangani 7 action types:
-
-- `SET_TRANSACTIONS` — load dari storage
-- `ADD_TRANSACTION` — tambah transaksi baru
-- `DELETE_TRANSACTION` — hapus transaksi
-- `SET_FILTER` — filter riwayat
-- `SET_LOADING` — loading state
-- `SET_TARGET` — target tabungan
-- `RESET_ALL` — reset semua data
-
-### ThemeContext (Bonus)
-
-Context terpisah untuk dark/light mode. State theme di-persist ke AsyncStorage.
-
-### Custom Hooks
-
-- `useTHR()` — abstraksi akses THRContext + computed values (summary, filteredTransactions, chartData). Dipakai di HomeScreen, HistoryScreen, ProfileScreen, TransactionCard.
-- `useStorage()` — abstraksi semua operasi AsyncStorage. Dipakai di THRContext, ThemeContext, ProfileScreen.
-
----
-
-## 🖼️ Screenshots
-
-> _(Tambahkan screenshot setelah running app)_
-
-| Home                          | Tambah                      | Riwayat                             | Dark Mode                     |
-| ----------------------------- | --------------------------- | ----------------------------------- | ----------------------------- |
-| ![home](screenshots/home.png) | ![add](screenshots/add.png) | ![history](screenshots/history.png) | ![dark](screenshots/dark.png) |
+## Cara Menjalankan
+npm install && npx expo start
